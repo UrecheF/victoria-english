@@ -1,85 +1,27 @@
-import { Link } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { PremiumNav } from '@/components/premium-nav';
 
-const quickPrompts = ['Explícame una palabra', 'Practiquemos conversación', 'Cuéntame una historia', 'Dame un reto'];
+const quickPrompts = ['Practiquemos conversación','Explícame esta palabra','Cuéntame una historia','Dame un reto','Algo divertido'];
 
-export default function TeacherScreen() {
-  const [message, setMessage] = useState('');
-  const [reply, setReply] = useState('Hi! Soy tu Teacher AI. Puedo ayudarte a practicar idiomas paso a paso.');
-
-  const send = (value = message) => {
-    const clean = value.trim();
-    if (!clean) return;
-    setReply(`✨ Entendí: “${clean}”. El modo IA real se conectará a un backend seguro; por ahora esta pantalla valida el flujo y la experiencia.`);
-    setMessage('');
-  };
-
-  return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled">
-        <View style={styles.topbar}>
-          <Link href="/" asChild><Pressable><Text style={styles.back}>← Inicio</Text></Pressable></Link>
-          <Text style={styles.brand}>Alana ♥ Victoria</Text>
-        </View>
-
-        <View style={styles.hero}>
-          <Text style={styles.avatar}>👩‍🏫</Text>
-          <Text style={styles.title}>Teacher AI</Text>
-          <Text style={styles.subtitle}>Tu profesora para aprender hablando, escuchando, jugando y preguntando.</Text>
-          <View style={styles.reply}><Text style={styles.replyText}>{reply}</Text></View>
-        </View>
-
-        <View style={styles.quickGrid}>
-          {quickPrompts.map((prompt) => (
-            <Pressable key={prompt} style={styles.quick} onPress={() => send(prompt)}>
-              <Text style={styles.quickText}>{prompt}</Text>
-            </Pressable>
-          ))}
-        </View>
-
-        <View style={styles.composer}>
-          <TextInput
-            value={message}
-            onChangeText={setMessage}
-            placeholder="Escribe qué quieres aprender..."
-            placeholderTextColor="#7890A5"
-            style={styles.input}
-            onSubmitEditing={() => send()}
-          />
-          <Pressable style={styles.send} onPress={() => send()}><Text style={styles.sendText}>ENVIAR</Text></Pressable>
-        </View>
-
-        <View style={styles.note}>
-          <Text style={styles.noteTitle}>🔒 IA preparada correctamente</Text>
-          <Text style={styles.noteText}>La clave del proveedor de IA nunca debe ir dentro de la app. El siguiente paso será conectar esta interfaz a un backend seguro con filtros infantiles y perfiles por edad.</Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+export default function TeacherScreen(){
+  const [message,setMessage]=useState('');
+  const [reply,setReply]=useState('Hi! I’m your AI teacher. What would you like to learn today?');
+  const send=(value=message)=>{const clean=value.trim();if(!clean)return;setReply(`✨ Entendí: “${clean}”. El backend de IA se conectará aquí de forma segura; este flujo visual ya está listo.`);setMessage('');};
+  return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled"><PremiumNav />
+    <View style={styles.hero}><View style={styles.header}><View><Text style={styles.eyebrow}>TU PROFESOR DE IDIOMAS</Text><Text style={styles.title}>Teacher AI</Text><Text style={styles.subtitle}>Habla, escucha, pregunta y aprende a tu ritmo.</Text></View><View style={styles.status}><View style={styles.dot}/><Text style={styles.statusText}>Online</Text></View></View>
+      <View style={styles.conversation}><View style={styles.avatarWrap}><Text style={styles.avatar}>👩🏻‍🏫</Text><View style={styles.aiBadge}><Text style={styles.aiBadgeText}>AI</Text></View></View><View style={styles.bubble}><Text style={styles.reply}>{reply}</Text></View></View>
+      <View style={styles.wave}><Text style={styles.waveText}>▂▄▆█▆▄▂ ▂▅▇▅▂ ▂▄▆█▆▄▂</Text></View>
+      <Pressable style={styles.mic} onPress={()=>send('Quiero practicar conversación')}><Text style={styles.micText}>🎤</Text></Pressable><Text style={styles.tap}>Tap to speak</Text>
+    </View>
+    <View style={styles.promptGrid}>{quickPrompts.map(p=><Pressable key={p} style={styles.prompt} onPress={()=>send(p)}><Text style={styles.promptText}>{p}</Text></Pressable>)}</View>
+    <View style={styles.composer}><TextInput value={message} onChangeText={setMessage} placeholder="Escribe qué quieres aprender..." placeholderTextColor="#7E90AB" style={styles.input} onSubmitEditing={()=>send()}/><Pressable style={styles.send} onPress={()=>send()}><Text style={styles.sendText}>Enviar ➜</Text></Pressable></View>
+    <View style={styles.featureRow}>{[['🗣️','Conversación','Practica situaciones reales'],['🔊','Pronunciación','Escucha y repite'],['📖','Historias','Aprende con cuentos'],['🎯','Retos','Gana estrellas y XP']].map(([i,t,d])=><View key={t} style={styles.feature}><Text style={styles.featureIcon}>{i}</Text><Text style={styles.featureTitle}>{t}</Text><Text style={styles.featureText}>{d}</Text></View>)}</View>
+    <View style={styles.note}><Text style={styles.noteTitle}>🔒 IA segura para niños</Text><Text style={styles.noteText}>Las claves nunca viven dentro de la app. La conexión real irá por backend con filtros por edad, perfiles y controles parentales.</Text></View>
+  </ScrollView></SafeAreaView>;
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#F7FBFF' },
-  page: { padding: 20, gap: 18, width: '100%', maxWidth: 900, alignSelf: 'center' },
-  topbar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  back: { color: '#1387F2', fontWeight: '900' },
-  brand: { color: '#143A63', fontWeight: '900', fontSize: 18 },
-  hero: { backgroundColor: '#EAF7FF', borderRadius: 30, padding: 28, alignItems: 'center' },
-  avatar: { fontSize: 76 },
-  title: { marginTop: 8, fontSize: 34, fontWeight: '900', color: '#143A63' },
-  subtitle: { marginTop: 8, color: '#53708A', textAlign: 'center', fontSize: 16, lineHeight: 23, maxWidth: 650 },
-  reply: { marginTop: 20, backgroundColor: 'white', borderRadius: 20, padding: 18, width: '100%' },
-  replyText: { color: '#34566F', fontSize: 16, lineHeight: 23 },
-  quickGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  quick: { flexGrow: 1, flexBasis: 180, backgroundColor: 'white', borderWidth: 1, borderColor: '#DFECF5', borderRadius: 18, padding: 16 },
-  quickText: { color: '#24506E', fontWeight: '800', textAlign: 'center' },
-  composer: { flexDirection: 'row', gap: 10, alignItems: 'center' },
-  input: { flex: 1, minHeight: 52, backgroundColor: 'white', borderWidth: 1, borderColor: '#D9E8F3', borderRadius: 17, paddingHorizontal: 16, color: '#143A63' },
-  send: { backgroundColor: '#FF4F9A', borderRadius: 17, paddingVertical: 17, paddingHorizontal: 18 },
-  sendText: { color: 'white', fontWeight: '900' },
-  note: { backgroundColor: '#FFF4D8', borderRadius: 22, padding: 20 },
-  noteTitle: { color: '#805A00', fontWeight: '900', fontSize: 17 },
-  noteText: { color: '#806E40', marginTop: 6, lineHeight: 21 },
+const styles=StyleSheet.create({
+  safe:{flex:1,backgroundColor:'#EAF7FF'},page:{padding:14,gap:14,maxWidth:1100,width:'100%',alignSelf:'center'},hero:{backgroundColor:'#DFF4FF',borderRadius:30,padding:24,borderWidth:1,borderColor:'#CFE8FF',shadowColor:'#3156B7',shadowOpacity:.12,shadowRadius:18,elevation:4},header:{flexDirection:'row',justifyContent:'space-between',gap:12},eyebrow:{fontSize:11,fontWeight:'900',letterSpacing:1.2,color:'#7C49FF'},title:{fontSize:34,fontWeight:'900',color:'#173C78'},subtitle:{color:'#5F7398',marginTop:4},status:{flexDirection:'row',alignItems:'center',gap:6,backgroundColor:'#FFF',paddingVertical:7,paddingHorizontal:11,borderRadius:14},dot:{width:9,height:9,borderRadius:5,backgroundColor:'#27C777'},statusText:{fontWeight:'900',color:'#1F8553',fontSize:11},conversation:{flexDirection:'row',alignItems:'center',gap:14,marginTop:22},avatarWrap:{position:'relative'},avatar:{fontSize:88},aiBadge:{position:'absolute',right:0,bottom:0,backgroundColor:'#7C49FF',width:28,height:28,borderRadius:14,alignItems:'center',justifyContent:'center',borderWidth:3,borderColor:'#FFF'},aiBadgeText:{color:'#FFF',fontWeight:'900',fontSize:9},bubble:{flex:1,backgroundColor:'#FFF',borderRadius:22,padding:18},reply:{fontSize:17,lineHeight:24,color:'#294E84',fontWeight:'700'},wave:{alignSelf:'center',marginTop:18,backgroundColor:'#EDF7FF',borderRadius:18,paddingVertical:9,paddingHorizontal:16},waveText:{color:'#14A6FF',letterSpacing:2},mic:{alignSelf:'center',width:76,height:76,borderRadius:38,backgroundColor:'#FF2F98',alignItems:'center',justifyContent:'center',marginTop:12,shadowColor:'#FF2F98',shadowOpacity:.35,shadowRadius:14,elevation:5},micText:{fontSize:32},tap:{textAlign:'center',marginTop:5,color:'#687C9D',fontWeight:'700'},promptGrid:{flexDirection:'row',flexWrap:'wrap',gap:9},prompt:{flexGrow:1,flexBasis:165,minWidth:145,backgroundColor:'#FFF',borderRadius:17,padding:13,borderWidth:1,borderColor:'#D8E8FF'},promptText:{textAlign:'center',color:'#254F88',fontWeight:'800',fontSize:12},composer:{flexDirection:'row',gap:9,backgroundColor:'#FFF',borderRadius:22,padding:9,borderWidth:1,borderColor:'#D8E8FF'},input:{flex:1,minHeight:48,paddingHorizontal:13,color:'#173C78'},send:{backgroundColor:'#7C49FF',borderRadius:16,paddingHorizontal:18,justifyContent:'center'},sendText:{color:'#FFF',fontWeight:'900'},featureRow:{flexDirection:'row',flexWrap:'wrap',gap:10},feature:{flexGrow:1,flexBasis:190,minWidth:165,backgroundColor:'#FFF',borderRadius:20,padding:16,borderWidth:1,borderColor:'#DCEAFF'},featureIcon:{fontSize:30},featureTitle:{marginTop:5,fontWeight:'900',color:'#173C78'},featureText:{marginTop:3,color:'#6B7E9D',fontSize:12},note:{backgroundColor:'#FFF4D8',borderRadius:20,padding:17},noteTitle:{fontWeight:'900',color:'#845D00'},noteText:{marginTop:5,color:'#826F3E',lineHeight:20}
 });
