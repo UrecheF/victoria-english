@@ -1,108 +1,17 @@
-import { Link } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { PremiumNav } from '@/components/premium-nav';
 
-const answers = [
-  { label: 'A Fish', correct: false },
-  { label: 'A Turtle', correct: true },
-  { label: 'A Dolphin', correct: false },
-];
-
-export default function GamesScreen() {
-  const [selected, setSelected] = useState<string | null>(null);
-  const result = useMemo(() => answers.find((item) => item.label === selected), [selected]);
-
-  return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.page}>
-        <View style={styles.topbar}>
-          <Link href="/" asChild><Pressable><Text style={styles.back}>← Inicio</Text></Pressable></Link>
-          <Text style={styles.brand}>🎮 Juegos</Text>
-          <Text style={styles.points}>⭐ 27</Text>
-        </View>
-
-        <View style={styles.hero}>
-          <Text style={styles.heroEmoji}>🐢</Text>
-          <Text style={styles.heroTitle}>What animal is this?</Text>
-          <Text style={styles.heroSubtitle}>Escoge la respuesta correcta</Text>
-
-          <View style={styles.answerList}>
-            {answers.map((answer) => {
-              const active = selected === answer.label;
-              const good = active && answer.correct;
-              const bad = active && !answer.correct;
-              return (
-                <Pressable
-                  key={answer.label}
-                  onPress={() => setSelected(answer.label)}
-                  style={[styles.answer, good && styles.goodAnswer, bad && styles.badAnswer]}
-                >
-                  <Text style={[styles.answerText, good && styles.goodText, bad && styles.badText]}>
-                    {answer.label} {good ? '✓' : bad ? '↻' : ''}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-
-          {result && (
-            <View style={[styles.feedback, result.correct ? styles.feedbackGood : styles.feedbackTry]}>
-              <Text style={styles.feedbackTitle}>{result.correct ? '🎉 Excellent!' : '💪 Almost!'}</Text>
-              <Text style={styles.feedbackText}>{result.correct ? 'Turtle significa tortuga. Ganaste una estrella.' : 'Mira la imagen y vuelve a intentarlo.'}</Text>
-            </View>
-          )}
-        </View>
-
-        <Text style={styles.sectionTitle}>Más juegos</Text>
-        <View style={styles.grid}>
-          {[
-            ['🧠', 'Memoria', 'Encuentra las parejas'],
-            ['🔊', 'Escucha y elige', 'Reconoce palabras por audio'],
-            ['🧩', 'Puzzle', 'Arma palabras e imágenes'],
-            ['🎤', 'Pronunciación', 'Habla y gana estrellas'],
-            ['🔤', 'Construye la palabra', 'Ordena letras'],
-            ['🖼️', 'Encuentra la imagen', 'Conecta palabra y objeto'],
-          ].map(([icon, title, caption]) => (
-            <View key={title} style={styles.gameCard}>
-              <Text style={styles.gameIcon}>{icon}</Text>
-              <Text style={styles.gameTitle}>{title}</Text>
-              <Text style={styles.gameCaption}>{caption}</Text>
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+const answers=[{label:'A Fish',correct:false},{label:'A Turtle',correct:true},{label:'A Dolphin',correct:false}];
+const cards=[['🍎','Word Match','Une palabras'],['🐯','Find the Picture','Encuentra la imagen'],['🎧','Listen & Choose','Escucha y elige'],['🧩','Puzzle','Arma la imagen'],['🃏','Memory','Memoria'],['🔤','Build the Word','Forma la palabra'],['🎤','Pronunciation','Habla y gana'],['🌍','World Quest','Explora culturas']];
+export default function GamesScreen(){
+ const [selected,setSelected]=useState<string|null>(null);const result=useMemo(()=>answers.find(i=>i.label===selected),[selected]);
+ return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.page}><PremiumNav/>
+  <View style={styles.header}><View><Text style={styles.eyebrow}>APRENDE JUGANDO</Text><Text style={styles.title}>Juegos</Text><Text style={styles.sub}>Retos visuales, memoria, escucha y pronunciación.</Text></View><View style={styles.points}><Text style={styles.pointsText}>⭐ 27</Text></View></View>
+  <View style={styles.categoryRow}>{['Todos','Vocabulario','Memoria','Pronunciación','Gramática'].map((x,i)=><View key={x} style={[styles.category,i===0&&styles.categoryActive]}><Text style={[styles.categoryText,i===0&&styles.categoryTextActive]}>{x}</Text></View>)}</View>
+  <View style={styles.grid}>{cards.map(([icon,title,caption],i)=><View key={title} style={[styles.gameCard,{backgroundColor:['#FFF','#F8F0FF','#EFF8FF','#FFF7E7'][i%4]}]}><Text style={styles.gameIcon}>{icon}</Text><Text style={styles.gameTitle}>{title}</Text><Text style={styles.gameCaption}>{caption}</Text><View style={styles.xpBadge}><Text style={styles.xpText}>+10 XP</Text></View></View>)}</View>
+  <View style={styles.challenge}><View style={styles.challengeVisual}><Text style={styles.turtle}>🐢</Text><Text style={styles.sparkles}>✨🌊✨</Text></View><View style={styles.challengeContent}><Text style={styles.challengeLabel}>RETO DEL DÍA</Text><Text style={styles.challengeTitle}>What animal is this?</Text><Text style={styles.challengeSub}>Escoge la respuesta correcta</Text><View style={styles.answerList}>{answers.map(a=>{const active=selected===a.label;const good=active&&a.correct;const bad=active&&!a.correct;return <Pressable key={a.label} onPress={()=>setSelected(a.label)} style={[styles.answer,good&&styles.good,bad&&styles.bad]}><Text style={[styles.answerText,good&&styles.goodText,bad&&styles.badText]}>{a.label} {good?'✓':bad?'↻':''}</Text></Pressable>})}</View>{result&&<View style={[styles.feedback,result.correct?styles.feedbackGood:styles.feedbackTry]}><Text style={styles.feedbackTitle}>{result.correct?'🎉 Excellent!':'💪 Almost!'}</Text><Text style={styles.feedbackText}>{result.correct?'Turtle significa tortuga. +1 estrella.':'Mira la imagen y vuelve a intentarlo.'}</Text></View>}</View></View>
+ </ScrollView></SafeAreaView>
 }
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#F7FBFF' },
-  page: { padding: 20, gap: 20, width: '100%', maxWidth: 1000, alignSelf: 'center' },
-  topbar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  back: { color: '#1387F2', fontWeight: '900' },
-  brand: { color: '#143A63', fontWeight: '900', fontSize: 20 },
-  points: { color: '#D68A00', fontWeight: '900' },
-  hero: { backgroundColor: '#EAF7FF', borderRadius: 30, padding: 28, alignItems: 'center' },
-  heroEmoji: { fontSize: 92 },
-  heroTitle: { marginTop: 8, fontSize: 30, fontWeight: '900', color: '#143A63', textAlign: 'center' },
-  heroSubtitle: { marginTop: 5, color: '#5F7A91' },
-  answerList: { width: '100%', maxWidth: 520, marginTop: 22, gap: 10 },
-  answer: { backgroundColor: 'white', borderRadius: 17, paddingVertical: 14, paddingHorizontal: 18, borderWidth: 2, borderColor: '#DCEAF5' },
-  goodAnswer: { backgroundColor: '#E9FAF1', borderColor: '#21B66F' },
-  badAnswer: { backgroundColor: '#FFF2F4', borderColor: '#FF759C' },
-  answerText: { color: '#244865', fontWeight: '900', textAlign: 'center', fontSize: 16 },
-  goodText: { color: '#168453' },
-  badText: { color: '#C94F72' },
-  feedback: { width: '100%', maxWidth: 520, marginTop: 16, borderRadius: 18, padding: 16 },
-  feedbackGood: { backgroundColor: '#E9FAF1' },
-  feedbackTry: { backgroundColor: '#FFF3D9' },
-  feedbackTitle: { fontSize: 18, fontWeight: '900', color: '#143A63' },
-  feedbackText: { marginTop: 4, color: '#587087' },
-  sectionTitle: { fontSize: 24, fontWeight: '900', color: '#143A63' },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  gameCard: { flexGrow: 1, flexBasis: 220, minWidth: 190, backgroundColor: 'white', borderRadius: 22, padding: 20, borderWidth: 1, borderColor: '#E1EDF6' },
-  gameIcon: { fontSize: 38 },
-  gameTitle: { marginTop: 10, fontWeight: '900', color: '#143A63', fontSize: 17 },
-  gameCaption: { marginTop: 4, color: '#6B8297', lineHeight: 19 },
-});
+const styles=StyleSheet.create({safe:{flex:1,backgroundColor:'#EAF7FF'},page:{padding:14,gap:14,maxWidth:1200,width:'100%',alignSelf:'center'},header:{flexDirection:'row',justifyContent:'space-between',alignItems:'center',backgroundColor:'#FFF',borderRadius:24,padding:18,borderWidth:1,borderColor:'#D8E9FF'},eyebrow:{fontSize:11,fontWeight:'900',letterSpacing:1.2,color:'#7C49FF'},title:{fontSize:31,fontWeight:'900',color:'#173C78'},sub:{color:'#687B9A',marginTop:3},points:{backgroundColor:'#FFF4D8',paddingVertical:9,paddingHorizontal:14,borderRadius:16},pointsText:{fontWeight:'900',color:'#9B6A00'},categoryRow:{flexDirection:'row',flexWrap:'wrap',gap:8},category:{backgroundColor:'#FFF',borderRadius:15,paddingVertical:9,paddingHorizontal:14,borderWidth:1,borderColor:'#DCEAFF'},categoryActive:{backgroundColor:'#7C49FF'},categoryText:{color:'#315A92',fontWeight:'800',fontSize:12},categoryTextActive:{color:'#FFF'},grid:{flexDirection:'row',flexWrap:'wrap',gap:10},gameCard:{flexGrow:1,flexBasis:180,minWidth:155,borderRadius:22,padding:17,borderWidth:1,borderColor:'#DDEAFF',position:'relative'},gameIcon:{fontSize:38},gameTitle:{marginTop:8,fontWeight:'900',color:'#173C78',fontSize:15},gameCaption:{marginTop:3,color:'#6D7E99',fontSize:12},xpBadge:{position:'absolute',right:10,top:10,backgroundColor:'#EAF9F1',paddingHorizontal:8,paddingVertical:4,borderRadius:11},xpText:{fontSize:9,fontWeight:'900',color:'#1C9256'},challenge:{flexDirection:'row',flexWrap:'wrap',gap:14,backgroundColor:'#DDF5FF',borderRadius:28,padding:18,borderWidth:1,borderColor:'#CBE8FF'},challengeVisual:{flex:1,minWidth:230,alignItems:'center',justifyContent:'center',backgroundColor:'#EAFBFF',borderRadius:22,padding:20},turtle:{fontSize:110},sparkles:{fontSize:25},challengeContent:{flex:1,minWidth:260},challengeLabel:{fontSize:11,fontWeight:'900',letterSpacing:1.2,color:'#7C49FF'},challengeTitle:{fontSize:27,fontWeight:'900',color:'#173C78',marginTop:4},challengeSub:{color:'#647899',marginTop:3},answerList:{gap:8,marginTop:14},answer:{backgroundColor:'#FFF',borderRadius:16,padding:13,borderWidth:2,borderColor:'#DDEAFF'},good:{backgroundColor:'#E9FFF2',borderColor:'#26C777'},bad:{backgroundColor:'#FFF0F4',borderColor:'#FF6A9F'},answerText:{fontWeight:'900',color:'#274D84',textAlign:'center'},goodText:{color:'#188D52'},badText:{color:'#C54D72'},feedback:{marginTop:10,borderRadius:16,padding:13},feedbackGood:{backgroundColor:'#E8FFF1'},feedbackTry:{backgroundColor:'#FFF4D8'},feedbackTitle:{fontWeight:'900',color:'#173C78'},feedbackText:{marginTop:3,color:'#5C7190'}})
