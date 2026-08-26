@@ -1,22 +1,35 @@
 # Alana & Victoria Languages
 
-Aplicación educativa de idiomas para niños, familias y adultos. El objetivo es que aprender se sienta como jugar: lecciones visuales, voz, juegos, progreso y una Teacher AI que acompañe al estudiante.
+Aplicación educativa de idiomas para niños, familias y adultos. La experiencia busca que aprender se sienta como jugar: lecciones visuales, Teacher AI, juegos, tarea con cámara, progreso y perfiles personalizados.
 
 ## Estado actual
 
-Ya existe un primer MVP navegable con:
+### Diseño premium implementado
 
-- Home responsive para móvil, tablet, web y pantallas grandes.
-- Branding **Alana ♥ Victoria**.
-- Idiomas iniciales: inglés, francés, italiano, español, alemán y portugués.
-- Rangos de edad: 2–4, 5–7, 8–11 y 12+/adultos.
-- Primera lección **Hawaii Presentation** con cinco frases, traducción, audio Web, estrellas y progreso.
-- Primer juego visual interactivo.
-- Pantalla **Teacher AI** preparada para backend seguro.
-- Flujo **Foto/Tarea → Crear lección** con cámara/galería real, vista previa, transcripción manual temporal y generador local de borrador.
-- Perfiles Alana y Victoria.
-- Dashboard inicial de progreso.
-- Concepto de TV/pantalla grande preparado para una fase Samsung/Tizen específica.
+La interfaz fue rediseñada tomando como referencia el mockup visual aprobado:
+
+- Navegación superior responsive con Inicio, Lecciones, Juegos, Teacher AI, Mi Tarea, Progreso y Perfiles.
+- Identidad **Alana ♥ Victoria Languages** con paleta cielo, rosa, azul, morado, verde y dorado.
+- Home tipo dashboard con hero, perfiles visuales, idiomas, primera lección, Teacher AI, juegos, tarea, progreso y dispositivos.
+- Lección Hawaii con panel de profesor, globo de frase, escucha, turno del estudiante, estrellas, progreso y timeline de frases.
+- Teacher AI con avatar, estado online, chat, prompts rápidos y micrófono visual.
+- Juegos con categorías, tarjetas visuales, XP y reto del día.
+- Mi Tarea con cámara/galería real, vista previa, pipeline visual y borrador local de lección.
+- Perfiles Alana/Victoria con selección visual y experiencia personalizada.
+- Progreso con métricas, idiomas, logros, práctica y resumen semanal.
+- Diseño adaptable a móvil, tablet, web y pantallas grandes.
+
+### Funcionalidad disponible
+
+- Primera lección **Hawaii Presentation** con 5 frases.
+- Pronunciación mediante Web Speech Synthesis en Web.
+- Sistema inicial de estrellas y progreso por frase.
+- Juego visual interactivo.
+- Cámara/galería mediante `expo-image-picker`.
+- Vista previa de la tarea.
+- Generación local explícita de borrador desde texto.
+- Contrato de frontend seguro para backend de OCR/Teacher AI.
+- Perfiles y dashboard de progreso visual.
 
 ## Ejecutar
 
@@ -25,58 +38,39 @@ npm install
 npx expo start --clear
 ```
 
-> `npm install` sincroniza el lockfile local e instala `expo-image-picker`, usado por la captura de tareas.
-
 Web:
 
 ```bash
 npm run web
 ```
 
-## Rutas principales
+## Rutas
 
-- `/` — Home
+- `/` — Dashboard principal
 - `/lesson` — Hawaii Presentation
-- `/games` — juego visual
+- `/games` — Juegos
 - `/teacher` — Teacher AI
-- `/scan` — cámara/galería → tarea → borrador de lección
-- `/profiles` — perfiles Alana/Victoria
-- `/progress` — progreso
+- `/scan` — Foto/Tarea → Lección
+- `/profiles` — Alana / Victoria
+- `/progress` — Progreso
 
-## Flujo de tarea
+## Pipeline oficial
 
-En `/scan` ya se puede:
+Teacher AI → 📸 foto de tarea → OCR → crea lección → juegos → progreso → perfiles → Android/iOS → TV.
 
-1. Tomar foto con la cámara.
-2. Elegir una foto existente.
-3. Verla dentro de la app.
-4. Escribir o pegar temporalmente el texto visible.
-5. Extraer vocabulario localmente.
-6. Crear un borrador con actividades.
-7. Continuar a Teacher AI o a una lección de práctica.
+## Arquitectura
 
-La app **no simula OCR**. El siguiente bloque conectará imagen → OCR seguro → Teacher AI → lección dinámica. Las API keys y secretos nunca deben vivir en el frontend.
+Expo SDK 57 · React Native · Expo Router · TypeScript.
 
-## Arquitectura objetivo
-
-El proyecto usa Expo SDK 57, React Native, Expo Router y TypeScript. La IA real, OCR y evaluación avanzada de pronunciación deben conectarse mediante servicios/backend seguros.
+La IA real, OCR y evaluación avanzada de pronunciación se conectarán mediante backend seguro. Las claves de proveedores nunca deben vivir dentro del frontend.
 
 ## Siguientes hitos
 
-1. OCR seguro desde imagen.
-2. Backend de Teacher AI con filtros infantiles y salida estructurada.
-3. Generador dinámico de lecciones y juegos.
-4. Voz y pronunciación real multiplataforma.
-5. Persistencia local de perfiles y progreso.
-6. Android/iOS instalables.
-7. Modo TV con navegación por control remoto y estrategia Samsung Tizen.
-
-## Primera lección
-
-**Hawaii Presentation**
-
-- Good morning, everyone!
-- Aloha! Welcome to Hawaii!
-- Today we will show you some beautiful parts of Hawaiian culture.
-- You will see animals, food, traditional clothes, music, and dance.
-- We hope you enjoy our presentation. Mahalo!
+1. Validación visual y responsive del nuevo sistema premium.
+2. Voz y evaluación real de pronunciación multiplataforma.
+3. Persistencia local de perfiles y progreso.
+4. OCR real desde la foto de tarea.
+5. Teacher AI con backend real y filtros infantiles.
+6. Generación dinámica de lecciones y juegos.
+7. Builds Android/iOS.
+8. Modo TV y estrategia Samsung Tizen.
