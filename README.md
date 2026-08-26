@@ -1,56 +1,99 @@
-# Welcome to your Expo app 👋
+# Alana & Victoria Languages 🌍💗
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicación educativa de idiomas pensada para niños, familias y adultos. El producto nace para Alana y Victoria y evoluciona como una experiencia multiplataforma con lecciones visuales, juegos, pronunciación, progreso y profesora con IA.
 
-## Get started
+## Objetivo
 
-1. Install dependencies
+Aprender idiomas mediante una secuencia simple y positiva:
 
-   ```bash
-   npm install
-   ```
+**Ver → escuchar → repetir → recibir ayuda → ganar estrellas → jugar → avanzar.**
 
-2. Start the app
+## Plataformas objetivo
 
-   ```bash
-   npx expo start
-   ```
+- Web / PWA
+- Android
+- iOS / iPadOS
+- Tablets
+- Smart TV mediante experiencia web optimizada para pantalla grande
+- Samsung TV/Tizen como fase específica de empaquetado y navegación por control remoto
 
-In the output, you'll find options to open the app in a
+## Idiomas iniciales
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Inglés
+- Francés
+- Italiano
+- Español
+- Alemán
+- Portugués
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+La arquitectura debe permitir sumar más idiomas sin rehacer la aplicación.
 
-## Get a fresh project
+## Rangos de aprendizaje
 
-When you're ready, run:
+- 2–4: Little Explorer
+- 5–7: Young Learner
+- 8–11: Junior Student
+- 12+: Teen & Adult
+
+## MVP actual
+
+- Home responsive con marca **Alana & Victoria**
+- Selector visual de idiomas y edades
+- Primera lección `Hawaii Presentation`
+- Progreso por frase
+- Audio de pronunciación en Web
+- Sistema inicial de estrellas
+- Primer juego visual interactivo
+- Diseño adaptable a móvil, web y pantalla grande
+
+## Siguiente corte
+
+1. Voz real multiplataforma.
+2. Evaluación de pronunciación.
+3. Persistencia de progreso.
+4. Perfiles Alana / Victoria / invitado.
+5. Selector dinámico de idioma.
+6. Teacher AI conversacional.
+7. Cámara/OCR: fotografía de tarea → generación de lección.
+8. Modo TV y navegación con control remoto.
+9. Builds Android/iOS y estrategia Tizen.
+10. Deploy web público.
+
+El seguimiento maestro está en el Issue #1 del repositorio.
+
+## Desarrollo
 
 ```bash
-npm run reset-project
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Web:
 
-### Other setup steps
+```bash
+npm run web
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Android:
 
-## Learn more
+```bash
+npm run android
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Estructura principal
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```text
+src/app/
+  index.tsx    # Home
+  lesson.tsx   # Lección interactiva
+  games.tsx    # Juegos visuales
+  _layout.tsx  # Navegación
+```
 
-## Join the community
+## Principios
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Cada corte debe quedar ejecutable.
+- No fingir IA o evaluación si todavía no existe un motor real.
+- Prioridad: funcionamiento → experiencia → seguridad → IA → publicación.
+- Interfaz amigable, visual y accesible para niños, sin limitar el producto a público infantil.
+- No guardar claves privadas en el frontend.
