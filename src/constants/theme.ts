@@ -1,29 +1,52 @@
 /**
  * Shared visual tokens for Alana & Victoria Languages.
+ *
+ * This file intentionally supports both the newer nested theme API
+ * (Colors.light / Colors.dark, Radius) and the legacy flat API used by
+ * several existing screens (Colors.primary, BorderRadius.lg, etc.).
  */
 
 import '@/global.css';
 
 import { Platform } from 'react-native';
 
-export const Colors = {
-  light: {
-    text: '#0F2F63',
-    background: '#EAF7FF',
-    backgroundElement: '#FFFFFF',
-    backgroundSelected: '#E8F1FF',
-    textSecondary: '#607A90',
-  },
-  dark: {
-    text: '#ffffff',
-    background: '#0B1F3A',
-    backgroundElement: '#162A46',
-    backgroundSelected: '#213B61',
-    textSecondary: '#B9CBE0',
-  },
+const lightColors = {
+  text: '#0F2F63',
+  background: '#EAF7FF',
+  backgroundElement: '#FFFFFF',
+  backgroundSelected: '#E8F1FF',
+  textSecondary: '#607A90',
 } as const;
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
+const darkColors = {
+  text: '#FFFFFF',
+  background: '#0B1F3A',
+  backgroundElement: '#162A46',
+  backgroundSelected: '#213B61',
+  textSecondary: '#B9CBE0',
+} as const;
+
+export const Colors = {
+  // Flat tokens kept for compatibility with existing feature screens.
+  primary: '#168DFF',
+  secondary: '#7C49FF',
+  accent: '#FF2F98',
+  success: '#26C96D',
+  warning: '#FFB400',
+  error: '#E5484D',
+  text: '#0F2F63',
+  textSecondary: '#607A90',
+  background: '#EAF7FF',
+  surface: '#FFFFFF',
+  border: '#D7E9FF',
+  muted: '#F3F8FC',
+
+  // Theme variants used by the original Expo starter hooks/components.
+  light: lightColors,
+  dark: darkColors,
+} as const;
+
+export type ThemeColor = keyof typeof lightColors & keyof typeof darkColors;
 
 export const Fonts = Platform.select({
   ios: {
@@ -62,13 +85,19 @@ export const Spacing = {
   six: 64,
 } as const;
 
-export const Radius = {
+export const BorderRadius = {
+  xs: 6,
   sm: 10,
   md: 16,
   lg: 24,
   xl: 32,
+  xxl: 40,
+  full: 999,
   pill: 999,
 } as const;
+
+// Newer name retained as an alias so both APIs work.
+export const Radius = BorderRadius;
 
 export const Breakpoints = {
   sm: 480,
@@ -81,7 +110,7 @@ export const Theme = {
   colors: Colors,
   fonts: Fonts,
   spacing: Spacing,
-  radius: Radius,
+  radius: BorderRadius,
   breakpoints: Breakpoints,
 } as const;
 
