@@ -19,11 +19,15 @@ export function PremiumNav() {
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
         {items.map(([href, icon, label]) => {
           const active = pathname === href;
+          const itemStyle = StyleSheet.flatten([styles.item, active ? styles.active : null]);
+          const iconStyle = StyleSheet.flatten([styles.icon, active ? styles.activeText : null]);
+          const labelStyle = StyleSheet.flatten([styles.label, active ? styles.activeText : null]);
+
           return (
             <Link key={href} href={href} asChild>
-              <Pressable style={[styles.item, active && styles.active]}>
-                <Text style={[styles.icon, active && styles.activeText]}>{icon}</Text>
-                <Text style={[styles.label, active && styles.activeText]}>{label}</Text>
+              <Pressable style={itemStyle}>
+                <Text style={iconStyle}>{icon}</Text>
+                <Text style={labelStyle}>{label}</Text>
               </Pressable>
             </Link>
           );
