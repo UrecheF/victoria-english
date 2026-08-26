@@ -27,6 +27,14 @@
     "plugins": [
       "expo-router",
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "Alana & Victoria necesita acceder a tus fotos para convertir tareas y cuadernos en lecciones.",
+          "cameraPermission": "Alana & Victoria necesita usar la cámara para fotografiar tareas y crear lecciones.",
+          "microphonePermission": false
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#EAF7FF",
