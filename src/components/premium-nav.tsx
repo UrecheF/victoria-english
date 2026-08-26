@@ -3,7 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 const items = [
   ['/', '⌂', 'Inicio'],
-  ['/lesson', '▣', 'Lecciones'],
+  ['/lessons', '▣', 'Lecciones'],
   ['/games', '🎮', 'Juegos'],
   ['/teacher', '🤖', 'Teacher AI'],
   ['/scan', '▤', 'Mi Tarea'],
@@ -18,7 +18,7 @@ export function PremiumNav() {
     <View style={styles.shell}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
         {items.map(([href, icon, label]) => {
-          const active = pathname === href;
+          const active = pathname === href || (href !== '/' && pathname.startsWith(href));
           const itemStyle = StyleSheet.flatten([styles.item, active ? styles.active : null]);
           const iconStyle = StyleSheet.flatten([styles.icon, active ? styles.activeText : null]);
           const labelStyle = StyleSheet.flatten([styles.label, active ? styles.activeText : null]);
@@ -33,7 +33,11 @@ export function PremiumNav() {
           );
         })}
         <View style={styles.spacer} />
-        <View style={styles.iconButton}><Text style={styles.iconButtonText}>⌕</Text></View>
+        <Link href="/search" asChild>
+          <Pressable style={styles.iconButton} accessibilityRole="button" accessibilityLabel="Buscar">
+            <Text style={styles.iconButtonText}>⌕</Text>
+          </Pressable>
+        </Link>
         <Link href="/profiles" asChild>
           <Pressable style={styles.profileButton}><Text style={styles.profileButtonText}>👧🏻</Text></Pressable>
         </Link>
@@ -61,8 +65,8 @@ const styles = StyleSheet.create({
   label: { color: '#183B78', fontWeight: '800', fontSize: 12 },
   activeText: { color: '#FFFFFF' },
   spacer: { width: 8 },
-  iconButton: { width: 38, height: 38, borderRadius: 19, backgroundColor: '#EDF7FF', alignItems: 'center', justifyContent: 'center' },
-  iconButtonText: { color: '#183B78', fontSize: 21, fontWeight: '900' },
-  profileButton: { width: 38, height: 38, borderRadius: 19, backgroundColor: '#12A9FF', alignItems: 'center', justifyContent: 'center' },
+  iconButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#EDF7FF', alignItems: 'center', justifyContent: 'center', borderWidth:1, borderColor:'#DDEAFF' },
+  iconButtonText: { color: '#183B78', fontSize: 22, fontWeight: '900' },
+  profileButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#12A9FF', alignItems: 'center', justifyContent: 'center' },
   profileButtonText: { fontSize: 20 },
 });
