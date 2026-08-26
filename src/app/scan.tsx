@@ -4,215 +4,24 @@ import { Link } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { PremiumNav } from '@/components/premium-nav';
 
-type HomeworkImage = {
-  uri: string;
-  width?: number;
-  height?: number;
-  fileName?: string | null;
-};
+type HomeworkImage={uri:string;width?:number;height?:number;fileName?:string|null};
+function extractVocabulary(text:string){const words=text.toLowerCase().replace(/[^a-zA-ZÀ-ÿ'\s-]/g,' ').split(/\s+/).map(w=>w.trim()).filter(w=>w.length>=3);return[...new Set(words)].slice(0,10)}
 
-function extractVocabulary(text: string) {
-  const words = text
-    .toLowerCase()
-    .replace(/[^a-zA-ZÀ-ÿ'\s-]/g, ' ')
-    .split(/\s+/)
-    .map((word) => word.trim())
-    .filter((word) => word.length >= 3);
-
-  return [...new Set(words)].slice(0, 10);
+export default function ScanScreen(){
+ const[image,setImage]=useState<HomeworkImage|null>(null);const[sourceText,setSourceText]=useState('');const[created,setCreated]=useState(false);const vocabulary=useMemo(()=>extractVocabulary(sourceText),[sourceText]);
+ const takePhoto=async()=>{const permission=await ImagePicker.requestCameraPermissionsAsync();if(!permission.granted){Alert.alert('Permiso de cámara','Necesitamos la cámara para fotografiar la tarea.');return;}const result=await ImagePicker.launchCameraAsync({mediaTypes:['images'],quality:.9,allowsEditing:false});if(!result.canceled&&result.assets[0]){const a=result.assets[0];setImage({uri:a.uri,width:a.width,height:a.height,fileName:a.fileName});setCreated(false)}};
+ const choosePhoto=async()=>{const result=await ImagePicker.launchImageLibraryAsync({mediaTypes:['images'],quality:.9,allowsEditing:false});if(!result.canceled&&result.assets[0]){const a=result.assets[0];setImage({uri:a.uri,width:a.width,height:a.height,fileName:a.fileName});setCreated(false)}};
+ const createLesson=()=>{if(!sourceText.trim()){Alert.alert('Falta el texto','Escribe o pega el texto visible en la tarea.');return;}setCreated(true)};
+ return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled"><PremiumNav/>
+  <View style={styles.hero}><View><Text style={styles.eyebrow}>MI TAREA</Text><Text style={styles.title}>Foto → Lección</Text><Text style={styles.subtitle}>Toma una foto del cuaderno, guía o libro y conviértelo en una experiencia de aprendizaje.</Text></View><Text style={styles.heroIcon}>📸✨</Text></View>
+  <View style={styles.pipeline}>{[['1','📷','Toma foto'],['2','OCR','Analizamos'],['3','🤖','Teacher AI'],['4','📖','Lección'],['5','🎮','Juego']].map(([n,i,l])=><View key={n} style={styles.pipelineItem}><Text style={styles.pipelineNumber}>{n}</Text><Text style={styles.pipelineIcon}>{i}</Text><Text style={styles.pipelineLabel}>{l}</Text></View>)}</View>
+  <View style={styles.mainRow}>
+   <View style={styles.captureCard}><Text style={styles.cardTitle}>Agrega la tarea</Text><Text style={styles.cardText}>Usa la cámara o selecciona una imagen guardada.</Text><View style={styles.captureActions}><Pressable style={styles.primary} onPress={takePhoto}><Text style={styles.primaryText}>📷 Tomar foto</Text></Pressable><Pressable style={styles.secondary} onPress={choosePhoto}><Text style={styles.secondaryText}>🖼️ Galería</Text></Pressable></View>{image?<View style={styles.previewWrap}><Image source={{uri:image.uri}} style={styles.preview} contentFit="contain" transition={180}/><View style={styles.readyRow}><Text style={styles.ready}>✓ Tarea detectada</Text><Text style={styles.meta}>{image.fileName||'Imagen capturada'}</Text></View></View>:<View style={styles.empty}><Text style={styles.emptyIcon}>📄</Text><Text style={styles.emptyTitle}>Tu tarea aparecerá aquí</Text><Text style={styles.emptyText}>Procura buena luz y que el texto se vea completo.</Text></View>}</View>
+   <View style={styles.textCard}><View style={styles.cardHeader}><Text style={styles.cardTitle}>Texto de la tarea</Text><View style={styles.badge}><Text style={styles.badgeText}>OCR · SIGUIENTE CORTE</Text></View></View><Text style={styles.cardText}>Mientras conectamos OCR real, escribe o pega el texto de la imagen. No simulamos lectura automática.</Text><TextInput value={sourceText} onChangeText={t=>{setSourceText(t);setCreated(false)}} multiline placeholder={'Ejemplo:\nThis is a cat.\nIt is small.\nThe cat is on the table.'} placeholderTextColor="#8CA0B3" style={styles.input}/><Pressable style={[styles.create,!sourceText.trim()&&styles.disabled]} onPress={createLesson} disabled={!sourceText.trim()}><Text style={styles.createText}>✨ Crear lección</Text></Pressable></View>
+  </View>
+  {created&&<View style={styles.lesson}><View style={styles.lessonHead}><View><Text style={styles.success}>✓ LECCIÓN LISTA</Text><Text style={styles.lessonTitle}>Mi tarea escolar</Text></View><Text style={styles.book}>📖</Text></View><View style={styles.detected}><Text style={styles.detectedText}>{sourceText}</Text></View><Text style={styles.subTitle}>Vocabulario</Text><View style={styles.wordGrid}>{vocabulary.length?vocabulary.map(w=><View key={w} style={styles.word}><Text style={styles.wordText}>{w}</Text></View>):<Text style={styles.helper}>Agrega más texto para generar vocabulario.</Text>}</View><View style={styles.activityGrid}>{[['🔊','Escucha y repite'],['🧩','Une palabras'],['🎤','Di la respuesta']].map(([i,t])=><View key={t} style={styles.activity}><Text style={styles.activityIcon}>{i}</Text><Text style={styles.activityTitle}>{t}</Text></View>)}</View><View style={styles.actions}><Link href="/teacher" asChild><Pressable style={styles.ai}><Text style={styles.aiText}>🤖 Abrir Teacher AI</Text></Pressable></Link><Link href="/lesson" asChild><Pressable style={styles.start}><Text style={styles.startText}>▶ Empezar lección</Text></Pressable></Link></View></View>}
+ </ScrollView></SafeAreaView>
 }
-
-export default function ScanScreen() {
-  const [image, setImage] = useState<HomeworkImage | null>(null);
-  const [sourceText, setSourceText] = useState('');
-  const [created, setCreated] = useState(false);
-  const vocabulary = useMemo(() => extractVocabulary(sourceText), [sourceText]);
-
-  const resetLesson = () => setCreated(false);
-
-  const takePhoto = async () => {
-    const permission = await ImagePicker.requestCameraPermissionsAsync();
-    if (!permission.granted) {
-      Alert.alert('Permiso de cámara', 'Necesitamos la cámara para fotografiar la tarea.');
-      return;
-    }
-
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ['images'],
-      quality: 0.9,
-      allowsEditing: false,
-    });
-
-    if (!result.canceled && result.assets[0]) {
-      const asset = result.assets[0];
-      setImage({ uri: asset.uri, width: asset.width, height: asset.height, fileName: asset.fileName });
-      resetLesson();
-    }
-  };
-
-  const choosePhoto = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      quality: 0.9,
-      allowsEditing: false,
-    });
-
-    if (!result.canceled && result.assets[0]) {
-      const asset = result.assets[0];
-      setImage({ uri: asset.uri, width: asset.width, height: asset.height, fileName: asset.fileName });
-      resetLesson();
-    }
-  };
-
-  const createLesson = () => {
-    if (!sourceText.trim()) {
-      Alert.alert('Falta el texto', 'Escribe o pega el texto visible en la tarea para crear esta primera versión de la lección.');
-      return;
-    }
-    setCreated(true);
-  };
-
-  return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled">
-        <View style={styles.topbar}>
-          <Link href="/" asChild><Pressable><Text style={styles.back}>← Inicio</Text></Pressable></Link>
-          <Text style={styles.brand}>📸 Aprende con tu tarea</Text>
-        </View>
-
-        <View style={styles.hero}>
-          <Text style={styles.camera}>📷✨</Text>
-          <Text style={styles.title}>Convierte la tarea en una clase</Text>
-          <Text style={styles.subtitle}>Fotografía el cuaderno o elige una imagen. La app ya captura y conserva la foto; el siguiente servicio será OCR + Teacher AI para leerla automáticamente.</Text>
-        </View>
-
-        <View style={styles.captureCard}>
-          <Text style={styles.cardTitle}>1 · Agrega la tarea</Text>
-          <View style={styles.captureActions}>
-            <Pressable style={styles.cameraButton} onPress={takePhoto}><Text style={styles.cameraButtonText}>📷 TOMAR FOTO</Text></Pressable>
-            <Pressable style={styles.galleryButton} onPress={choosePhoto}><Text style={styles.galleryButtonText}>🖼️ ELEGIR FOTO</Text></Pressable>
-          </View>
-
-          {image ? (
-            <View style={styles.previewWrap}>
-              <Image source={{ uri: image.uri }} style={styles.preview} contentFit="contain" transition={180} />
-              <View style={styles.previewMeta}>
-                <Text style={styles.ready}>✅ Imagen lista</Text>
-                <Text style={styles.metaText}>{image.fileName || 'Tarea capturada'}{image.width && image.height ? ` · ${image.width}×${image.height}` : ''}</Text>
-              </View>
-            </View>
-          ) : (
-            <View style={styles.emptyPreview}><Text style={styles.emptyIcon}>📄</Text><Text style={styles.emptyText}>Aún no has agregado una foto.</Text></View>
-          )}
-        </View>
-
-        <View style={styles.card}>
-          <View style={styles.stepHeader}>
-            <Text style={styles.cardTitle}>2 · Texto de la tarea</Text>
-            <View style={styles.pendingBadge}><Text style={styles.pendingText}>OCR REAL · SIGUIENTE CORTE</Text></View>
-          </View>
-          <Text style={styles.cardText}>Por ahora transcribe o pega aquí lo que aparece en la foto. No simulamos OCR: cuando conectemos el backend, este campo se llenará automáticamente desde la imagen.</Text>
-          <TextInput
-            value={sourceText}
-            onChangeText={(text) => { setSourceText(text); resetLesson(); }}
-            multiline
-            placeholder={'Ejemplo:\nAnimals\nDog\nCat\nBird\nHorse'}
-            placeholderTextColor="#8CA0B3"
-            style={styles.input}
-          />
-          <Pressable style={[styles.create, !sourceText.trim() && styles.disabled]} onPress={createLesson} disabled={!sourceText.trim()}>
-            <Text style={styles.createText}>✨ CREAR BORRADOR DE LECCIÓN</Text>
-          </Pressable>
-        </View>
-
-        {created && (
-          <View style={styles.lesson}>
-            <Text style={styles.success}>✅ Borrador creado en el dispositivo</Text>
-            <Text style={styles.lessonTitle}>Mi tarea escolar</Text>
-            <Text style={styles.detected}>{sourceText}</Text>
-
-            <Text style={styles.subTitle}>Vocabulario detectado localmente</Text>
-            <View style={styles.wordGrid}>
-              {vocabulary.length > 0
-                ? vocabulary.map((word) => <View key={word} style={styles.word}><Text style={styles.wordText}>{word}</Text></View>)
-                : <Text style={styles.helper}>Escribe varias palabras para generar vocabulario.</Text>}
-            </View>
-
-            <View style={styles.activityGrid}>
-              <View style={styles.activity}><Text style={styles.activityIcon}>🔊</Text><Text style={styles.activityTitle}>Escucha y repite</Text><Text style={styles.activityText}>Pronunciación guiada del vocabulario.</Text></View>
-              <View style={styles.activity}><Text style={styles.activityIcon}>🧩</Text><Text style={styles.activityTitle}>Une palabras</Text><Text style={styles.activityText}>Juego visual para reforzar memoria.</Text></View>
-              <View style={styles.activity}><Text style={styles.activityIcon}>🎤</Text><Text style={styles.activityTitle}>Di la respuesta</Text><Text style={styles.activityText}>Preparado para evaluación de voz.</Text></View>
-            </View>
-
-            <Text style={styles.helper}>Teacher AI real sustituirá esta generación local para crear explicaciones, imágenes, preguntas y juegos adaptados a la edad y al idioma elegido.</Text>
-            <Link href="/teacher" asChild><Pressable style={styles.teacher}><Text style={styles.teacherText}>🤖 CONTINUAR CON TEACHER AI</Text></Pressable></Link>
-            <Link href="/lesson" asChild><Pressable style={styles.start}><Text style={styles.startText}>👩‍🏫 ABRIR LECCIÓN DE PRÁCTICA</Text></Pressable></Link>
-          </View>
-        )}
-
-        <View style={styles.roadmap}>
-          <Text style={styles.roadmapTitle}>Pipeline que estamos construyendo</Text>
-          <Text style={styles.roadmapText}>📷 Cámara/galería ✅ → OCR seguro → análisis con IA → lección personalizada → juego automático → guardar en Mis Lecciones → progreso del perfil.</Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#F7FBFF' },
-  page: { padding: 20, gap: 18, maxWidth: 960, width: '100%', alignSelf: 'center' },
-  topbar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 },
-  back: { color: '#1387F2', fontWeight: '900' },
-  brand: { color: '#143A63', fontWeight: '900', fontSize: 18 },
-  hero: { backgroundColor: '#EAF7FF', borderRadius: 30, padding: 28, alignItems: 'center' },
-  camera: { fontSize: 66 },
-  title: { fontSize: 32, fontWeight: '900', color: '#143A63', marginTop: 8, textAlign: 'center' },
-  subtitle: { color: '#55718A', textAlign: 'center', lineHeight: 22, maxWidth: 700, marginTop: 8 },
-  captureCard: { backgroundColor: 'white', borderRadius: 24, padding: 22, borderWidth: 1, borderColor: '#E1EDF5' },
-  captureActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 14 },
-  cameraButton: { flexGrow: 1, minWidth: 180, backgroundColor: '#1387F2', borderRadius: 17, paddingVertical: 15, alignItems: 'center' },
-  cameraButtonText: { color: 'white', fontWeight: '900' },
-  galleryButton: { flexGrow: 1, minWidth: 180, backgroundColor: '#EEF7FF', borderRadius: 17, paddingVertical: 15, alignItems: 'center', borderWidth: 1, borderColor: '#CFE5F7' },
-  galleryButtonText: { color: '#1567A9', fontWeight: '900' },
-  previewWrap: { marginTop: 16, borderRadius: 20, overflow: 'hidden', backgroundColor: '#F4F9FC', borderWidth: 1, borderColor: '#DDEAF3' },
-  preview: { width: '100%', height: 310, backgroundColor: '#EDF5FA' },
-  previewMeta: { padding: 12 },
-  ready: { color: '#158255', fontWeight: '900' },
-  metaText: { color: '#6A8298', marginTop: 3, fontSize: 12 },
-  emptyPreview: { marginTop: 16, minHeight: 150, borderRadius: 20, borderStyle: 'dashed', borderWidth: 2, borderColor: '#CFE0EC', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FBFDFF' },
-  emptyIcon: { fontSize: 40 },
-  emptyText: { color: '#7790A5', marginTop: 6 },
-  card: { backgroundColor: 'white', borderRadius: 24, padding: 22, borderWidth: 1, borderColor: '#E1EDF5' },
-  stepHeader: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
-  cardTitle: { fontSize: 20, fontWeight: '900', color: '#143A63' },
-  pendingBadge: { backgroundColor: '#FFF4D8', borderRadius: 99, paddingVertical: 5, paddingHorizontal: 10 },
-  pendingText: { color: '#8B6500', fontWeight: '900', fontSize: 10 },
-  cardText: { marginTop: 7, color: '#607A90', lineHeight: 21 },
-  input: { minHeight: 150, marginTop: 16, borderWidth: 1, borderColor: '#D7E6F1', backgroundColor: '#FBFDFF', borderRadius: 18, padding: 16, textAlignVertical: 'top', color: '#143A63', fontSize: 16 },
-  create: { marginTop: 14, backgroundColor: '#FF4F9A', borderRadius: 17, paddingVertical: 15, alignItems: 'center' },
-  disabled: { opacity: 0.45 },
-  createText: { color: 'white', fontWeight: '900' },
-  lesson: { backgroundColor: '#EAFBF2', borderRadius: 24, padding: 22 },
-  success: { color: '#158255', fontWeight: '900' },
-  lessonTitle: { color: '#143A63', fontSize: 24, fontWeight: '900', marginTop: 6 },
-  detected: { color: '#52708A', marginTop: 10, lineHeight: 21, backgroundColor: 'rgba(255,255,255,0.7)', borderRadius: 14, padding: 12 },
-  subTitle: { color: '#235471', fontWeight: '900', marginTop: 18 },
-  wordGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 10 },
-  word: { backgroundColor: 'white', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 13 },
-  wordText: { color: '#235471', fontWeight: '800' },
-  activityGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 18 },
-  activity: { flexGrow: 1, flexBasis: 180, backgroundColor: 'white', borderRadius: 18, padding: 16 },
-  activityIcon: { fontSize: 27 },
-  activityTitle: { color: '#143A63', fontWeight: '900', marginTop: 8 },
-  activityText: { color: '#688099', lineHeight: 19, marginTop: 4, fontSize: 13 },
-  helper: { marginTop: 14, color: '#4C806A', lineHeight: 21 },
-  teacher: { marginTop: 16, backgroundColor: '#7C4DFF', borderRadius: 17, paddingVertical: 14, alignItems: 'center' },
-  teacherText: { color: 'white', fontWeight: '900' },
-  start: { marginTop: 10, backgroundColor: '#16A66A', borderRadius: 17, paddingVertical: 14, alignItems: 'center' },
-  startText: { color: 'white', fontWeight: '900' },
-  roadmap: { backgroundColor: '#FFF4D8', borderRadius: 22, padding: 20 },
-  roadmapTitle: { color: '#805A00', fontWeight: '900' },
-  roadmapText: { color: '#806E40', marginTop: 6, lineHeight: 21 },
-});
+const styles=StyleSheet.create({safe:{flex:1,backgroundColor:'#EAF7FF'},page:{padding:14,gap:14,maxWidth:1200,width:'100%',alignSelf:'center'},hero:{backgroundColor:'#EEE9FF',borderRadius:28,padding:22,flexDirection:'row',justifyContent:'space-between',alignItems:'center',borderWidth:1,borderColor:'#DFD8FF'},eyebrow:{fontSize:11,fontWeight:'900',letterSpacing:1.2,color:'#7C49FF'},title:{fontSize:31,fontWeight:'900',color:'#173C78'},subtitle:{color:'#687B9B',marginTop:4,maxWidth:700,lineHeight:20},heroIcon:{fontSize:58},pipeline:{flexDirection:'row',flexWrap:'wrap',gap:8,backgroundColor:'#FFF',borderRadius:22,padding:12,borderWidth:1,borderColor:'#DDEAFF'},pipelineItem:{flexGrow:1,minWidth:110,alignItems:'center'},pipelineNumber:{width:24,height:24,borderRadius:12,backgroundColor:'#7C49FF',color:'#FFF',textAlign:'center',lineHeight:24,fontWeight:'900'},pipelineIcon:{fontSize:25,marginTop:4,color:'#173C78'},pipelineLabel:{fontSize:10,fontWeight:'900',color:'#315A91',marginTop:2},mainRow:{flexDirection:'row',flexWrap:'wrap',gap:12},captureCard:{flex:1,minWidth:300,backgroundColor:'#F3F1FF',borderRadius:26,padding:20,borderWidth:1,borderColor:'#E4DEFF'},textCard:{flex:1,minWidth:300,backgroundColor:'#FFF',borderRadius:26,padding:20,borderWidth:1,borderColor:'#DCEAFF'},cardHeader:{flexDirection:'row',justifyContent:'space-between',alignItems:'center',gap:8},cardTitle:{fontSize:20,fontWeight:'900',color:'#173C78'},cardText:{marginTop:5,color:'#687B99',lineHeight:19},badge:{backgroundColor:'#FFF4D8',paddingVertical:5,paddingHorizontal:8,borderRadius:11},badgeText:{fontSize:9,fontWeight:'900',color:'#8B6500'},captureActions:{flexDirection:'row',gap:8,marginTop:14},primary:{flex:1,backgroundColor:'#FF2F98',padding:13,borderRadius:17,alignItems:'center'},primaryText:{color:'#FFF',fontWeight:'900'},secondary:{flex:1,backgroundColor:'#E9F4FF',padding:13,borderRadius:17,alignItems:'center'},secondaryText:{color:'#24558E',fontWeight:'900'},previewWrap:{marginTop:14,backgroundColor:'#FFF',borderRadius:18,overflow:'hidden'},preview:{width:'100%',height:280},readyRow:{padding:11},ready:{color:'#188D52',fontWeight:'900'},meta:{color:'#7385A1',fontSize:11,marginTop:2},empty:{minHeight:250,marginTop:14,borderRadius:18,backgroundColor:'#FFF',borderWidth:2,borderStyle:'dashed',borderColor:'#D6D1F7',alignItems:'center',justifyContent:'center',padding:20},emptyIcon:{fontSize:52},emptyTitle:{fontWeight:'900',color:'#31558B',marginTop:6},emptyText:{color:'#7A89A3',textAlign:'center',marginTop:3},input:{minHeight:170,marginTop:14,backgroundColor:'#F8FBFF',borderRadius:18,padding:14,borderWidth:1,borderColor:'#DCEAFF',textAlignVertical:'top',color:'#173C78'},create:{marginTop:12,backgroundColor:'#7C49FF',borderRadius:17,padding:14,alignItems:'center'},disabled:{opacity:.4},createText:{color:'#FFF',fontWeight:'900'},lesson:{backgroundColor:'#F1FFF7',borderRadius:26,padding:20,borderWidth:1,borderColor:'#D9F2E4'},lessonHead:{flexDirection:'row',justifyContent:'space-between',alignItems:'center'},success:{color:'#188D52',fontWeight:'900',fontSize:11,letterSpacing:1},lessonTitle:{fontSize:24,fontWeight:'900',color:'#173C78',marginTop:3},book:{fontSize:42},detected:{marginTop:12,backgroundColor:'#FFF',padding:14,borderRadius:17},detectedText:{color:'#43618A',lineHeight:20},subTitle:{fontWeight:'900',color:'#173C78',marginTop:14},wordGrid:{flexDirection:'row',flexWrap:'wrap',gap:7,marginTop:8},word:{backgroundColor:'#FFF',paddingVertical:7,paddingHorizontal:11,borderRadius:12},wordText:{fontWeight:'800',color:'#31598D'},helper:{color:'#5C7A68'},activityGrid:{flexDirection:'row',flexWrap:'wrap',gap:8,marginTop:14},activity:{flexGrow:1,minWidth:150,backgroundColor:'#FFF',borderRadius:16,padding:12,alignItems:'center'},activityIcon:{fontSize:27},activityTitle:{fontWeight:'900',color:'#31558B',marginTop:4},actions:{flexDirection:'row',flexWrap:'wrap',gap:8,marginTop:14},ai:{backgroundColor:'#7C49FF',borderRadius:17,padding:13,paddingHorizontal:18},aiText:{color:'#FFF',fontWeight:'900'},start:{backgroundColor:'#22B86C',borderRadius:17,padding:13,paddingHorizontal:18},startText:{color:'#FFF',fontWeight:'900'}})
