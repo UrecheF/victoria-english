@@ -64,6 +64,22 @@ Expo SDK 57 · React Native · Expo Router · TypeScript.
 
 La IA real, OCR y evaluación avanzada de pronunciación se conectarán mediante backend seguro. Las claves de proveedores nunca deben vivir dentro del frontend.
 
+## Validación visual antes del siguiente bloque
+
+Probar en Web y móvil:
+
+- navegación superior sin cortes;
+- hero responsive;
+- cards sin desbordes;
+- lectura correcta de textos largos;
+- botones táctiles cómodos;
+- perfiles en una y dos columnas;
+- lección en layout ancho y estrecho;
+- juegos y reto diario;
+- cámara/galería;
+- Teacher AI;
+- progreso.
+
 ## Siguientes hitos
 
 1. Validación visual y responsive del nuevo sistema premium.
