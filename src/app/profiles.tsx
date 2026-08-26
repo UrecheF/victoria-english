@@ -1,64 +1,21 @@
 import { Link } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { PremiumNav } from '@/components/premium-nav';
 
-const profiles = [
-  { name: 'Alana', icon: '👧', level: 'Little Explorer', color: '#FFE4F1' },
-  { name: 'Victoria', icon: '👧🏻', level: 'Young Learner', color: '#E5F2FF' },
+const profiles=[
+ {name:'Alana',icon:'👧🏼',age:'6 años',level:'Young Learner',color:'#FFE3F1',accent:'#FF2F98',tag:'♥'},
+ {name:'Victoria',icon:'👧🏻',age:'8 años',level:'Junior Student',color:'#EEE8FF',accent:'#7C49FF',tag:'★'},
 ];
-
-export default function ProfilesScreen() {
-  const [selected, setSelected] = useState('Victoria');
-
-  return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.page}>
-        <View style={styles.topbar}>
-          <Link href="/" asChild><Pressable><Text style={styles.back}>← Inicio</Text></Pressable></Link>
-          <Text style={styles.title}>Perfiles</Text>
-        </View>
-
-        <Text style={styles.heading}>¿Quién va a aprender hoy?</Text>
-        <Text style={styles.subheading}>Cada perfil tendrá su propio idioma, progreso, estrellas, dificultad y recomendaciones.</Text>
-
-        <View style={styles.grid}>
-          {profiles.map((profile) => {
-            const active = selected === profile.name;
-            return (
-              <Pressable key={profile.name} onPress={() => setSelected(profile.name)} style={[styles.card, { backgroundColor: profile.color }, active && styles.active]}>
-                <Text style={styles.icon}>{profile.icon}</Text>
-                <Text style={styles.name}>{profile.name}</Text>
-                <Text style={styles.level}>{profile.level}</Text>
-                <Text style={styles.check}>{active ? '✓ Perfil activo' : 'Tocar para elegir'}</Text>
-              </Pressable>
-            );
-          })}
-        </View>
-
-        <Link href="/lesson" asChild>
-          <Pressable style={styles.continue}><Text style={styles.continueText}>CONTINUAR COMO {selected.toUpperCase()} →</Text></Pressable>
-        </Link>
-      </View>
-    </SafeAreaView>
-  );
+export default function ProfilesScreen(){
+ const [selected,setSelected]=useState('Alana');
+ return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.page}><PremiumNav/>
+  <View style={styles.hero}><Text style={styles.eyebrow}>EXPERIENCIA PERSONALIZADA</Text><Text style={styles.heading}>¿Quién está aprendiendo hoy?</Text><Text style={styles.subheading}>Elige un perfil y adaptamos idioma, nivel, juegos, voz y recomendaciones.</Text></View>
+  <View style={styles.mainRow}><View style={styles.profileGrid}>{profiles.map(p=>{const active=selected===p.name;return <Pressable key={p.name} onPress={()=>setSelected(p.name)} style={[styles.card,{backgroundColor:p.color,borderColor:active?p.accent:'transparent'}]}><View style={styles.avatarCircle}><Text style={styles.icon}>{p.icon}</Text></View><Text style={[styles.name,{color:p.accent}]}>{p.name} {p.tag}</Text><Text style={styles.age}>{p.age}</Text><Text style={styles.level}>{p.level}</Text><View style={[styles.select,{backgroundColor:active?p.accent:'#FFF'}]}><Text style={[styles.selectText,{color:active?'#FFF':p.accent}]}>{active?'✓ Perfil activo':'○ Elegir'}</Text></View></Pressable>})}
+   <Pressable style={styles.addCard}><Text style={styles.addIcon}>＋</Text><Text style={styles.addText}>Agregar perfil</Text><Text style={styles.addCaption}>Invitado, hermano o adulto</Text></Pressable></View>
+   <View style={styles.values}><Text style={styles.valuesTitle}>Crecer aprendiendo</Text>{[['🛩️','Aprende'],['🎮','Juega'],['🧭','Explora'],['🌱','Crece'],['🚀','Sin límites']].map(([i,t])=><View key={t} style={styles.valueRow}><Text style={styles.valueIcon}>{i}</Text><Text style={styles.valueText}>{t}</Text></View>)}<Text style={styles.bigHeart}>♥</Text></View></View>
+  <Link href="/lesson" asChild><Pressable style={styles.continue}><Text style={styles.continueText}>CONTINUAR COMO {selected.toUpperCase()} →</Text></Pressable></Link>
+ </ScrollView></SafeAreaView>
 }
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#F7FBFF' },
-  page: { flex: 1, padding: 20, gap: 18, width: '100%', maxWidth: 900, alignSelf: 'center' },
-  topbar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  back: { color: '#1387F2', fontWeight: '900' },
-  title: { color: '#143A63', fontWeight: '900', fontSize: 18 },
-  heading: { fontSize: 32, lineHeight: 38, fontWeight: '900', color: '#143A63', textAlign: 'center', marginTop: 25 },
-  subheading: { color: '#607A90', textAlign: 'center', lineHeight: 22, maxWidth: 650, alignSelf: 'center' },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 16, marginTop: 12 },
-  card: { flexGrow: 1, flexBasis: 280, borderRadius: 28, padding: 28, alignItems: 'center', borderWidth: 3, borderColor: 'transparent' },
-  active: { borderColor: '#FF4F9A' },
-  icon: { fontSize: 72 },
-  name: { marginTop: 8, fontSize: 27, fontWeight: '900', color: '#143A63' },
-  level: { marginTop: 4, color: '#55718A', fontWeight: '700' },
-  check: { marginTop: 14, color: '#FF4F9A', fontWeight: '900' },
-  continue: { marginTop: 'auto', backgroundColor: '#1387F2', borderRadius: 18, paddingVertical: 16, alignItems: 'center' },
-  continueText: { color: 'white', fontWeight: '900' },
-});
+const styles=StyleSheet.create({safe:{flex:1,backgroundColor:'#EAF7FF'},page:{padding:14,gap:14,maxWidth:1100,width:'100%',alignSelf:'center'},hero:{backgroundColor:'#FFF',borderRadius:26,padding:22,borderWidth:1,borderColor:'#D9E9FF'},eyebrow:{fontSize:11,fontWeight:'900',letterSpacing:1.2,color:'#7C49FF',textAlign:'center'},heading:{fontSize:31,fontWeight:'900',color:'#173C78',textAlign:'center',marginTop:4},subheading:{color:'#6A7C9B',textAlign:'center',marginTop:5,lineHeight:20},mainRow:{flexDirection:'row',flexWrap:'wrap',gap:12},profileGrid:{flex:3,flexDirection:'row',flexWrap:'wrap',gap:12},card:{flexGrow:1,flexBasis:245,minWidth:220,borderRadius:26,padding:20,alignItems:'center',borderWidth:3,shadowColor:'#2E54AF',shadowOpacity:.09,shadowRadius:14,elevation:3},avatarCircle:{width:110,height:110,borderRadius:55,backgroundColor:'#FFF',alignItems:'center',justifyContent:'center'},icon:{fontSize:70},name:{fontSize:24,fontWeight:'900',marginTop:8},age:{marginTop:3,fontWeight:'800',color:'#445E88'},level:{color:'#6A7D9B',marginTop:2},select:{marginTop:14,borderRadius:17,paddingVertical:11,paddingHorizontal:24,minWidth:150,alignItems:'center'},selectText:{fontWeight:'900'},addCard:{flexGrow:1,flexBasis:245,minWidth:220,backgroundColor:'rgba(255,255,255,.8)',borderRadius:26,padding:20,alignItems:'center',justifyContent:'center',borderWidth:2,borderStyle:'dashed',borderColor:'#BFD6F4'},addIcon:{fontSize:45,color:'#1AA8FF'},addText:{fontSize:18,fontWeight:'900',color:'#194A86'},addCaption:{color:'#7890AA',marginTop:4},values:{flex:1,minWidth:180,backgroundColor:'#FFF4FA',borderRadius:26,padding:20,borderWidth:1,borderColor:'#FFE0EF'},valuesTitle:{fontSize:19,fontWeight:'900',color:'#173C78',marginBottom:8},valueRow:{flexDirection:'row',alignItems:'center',gap:10,paddingVertical:7},valueIcon:{fontSize:24},valueText:{fontWeight:'900',color:'#315A8D'},bigHeart:{fontSize:52,color:'#FF2F98',textAlign:'center',marginTop:8},continue:{backgroundColor:'#FF2F98',borderRadius:20,padding:15,alignItems:'center',shadowColor:'#FF2F98',shadowOpacity:.25,shadowRadius:12,elevation:4},continueText:{color:'#FFF',fontWeight:'900'}})
