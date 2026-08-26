@@ -13,7 +13,7 @@ Ya existe un primer MVP navegable con:
 - Primera lección **Hawaii Presentation** con cinco frases, traducción, audio Web, estrellas y progreso.
 - Primer juego visual interactivo.
 - Pantalla **Teacher AI** preparada para backend seguro.
-- Flujo **Foto/Tarea → Crear lección** con generador local de demostración; cámara/OCR real pendiente.
+- Flujo **Foto/Tarea → Crear lección** con cámara/galería real, vista previa, transcripción manual temporal y generador local de borrador.
 - Perfiles Alana y Victoria.
 - Dashboard inicial de progreso.
 - Concepto de TV/pantalla grande preparado para una fase Samsung/Tizen específica.
@@ -24,6 +24,8 @@ Ya existe un primer MVP navegable con:
 npm install
 npx expo start --clear
 ```
+
+> `npm install` sincroniza el lockfile local e instala `expo-image-picker`, usado por la captura de tareas.
 
 Web:
 
@@ -37,21 +39,35 @@ npm run web
 - `/lesson` — Hawaii Presentation
 - `/games` — juego visual
 - `/teacher` — Teacher AI
-- `/scan` — tarea a lección
+- `/scan` — cámara/galería → tarea → borrador de lección
 - `/profiles` — perfiles Alana/Victoria
 - `/progress` — progreso
 
+## Flujo de tarea
+
+En `/scan` ya se puede:
+
+1. Tomar foto con la cámara.
+2. Elegir una foto existente.
+3. Verla dentro de la app.
+4. Escribir o pegar temporalmente el texto visible.
+5. Extraer vocabulario localmente.
+6. Crear un borrador con actividades.
+7. Continuar a Teacher AI o a una lección de práctica.
+
+La app **no simula OCR**. El siguiente bloque conectará imagen → OCR seguro → Teacher AI → lección dinámica. Las API keys y secretos nunca deben vivir en el frontend.
+
 ## Arquitectura objetivo
 
-El proyecto usa Expo SDK 57, React Native, Expo Router y TypeScript. La IA real, OCR y evaluación avanzada de pronunciación deben conectarse mediante servicios/backend seguros: las API keys nunca deben vivir dentro del frontend.
+El proyecto usa Expo SDK 57, React Native, Expo Router y TypeScript. La IA real, OCR y evaluación avanzada de pronunciación deben conectarse mediante servicios/backend seguros.
 
 ## Siguientes hitos
 
-1. Voz y pronunciación real multiplataforma.
-2. Persistencia local de perfiles y progreso.
-3. Cámara real + OCR.
-4. Backend de Teacher AI con filtros infantiles.
-5. Generador dinámico de lecciones y juegos.
+1. OCR seguro desde imagen.
+2. Backend de Teacher AI con filtros infantiles y salida estructurada.
+3. Generador dinámico de lecciones y juegos.
+4. Voz y pronunciación real multiplataforma.
+5. Persistencia local de perfiles y progreso.
 6. Android/iOS instalables.
 7. Modo TV con navegación por control remoto y estrategia Samsung Tizen.
 
