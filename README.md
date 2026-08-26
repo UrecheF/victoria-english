@@ -1,71 +1,28 @@
-# Alana & Victoria Languages 🌍💗
+# Alana & Victoria Languages
 
-Aplicación educativa de idiomas pensada para niños, familias y adultos. El producto nace para Alana y Victoria y evoluciona como una experiencia multiplataforma con lecciones visuales, juegos, pronunciación, progreso y profesora con IA.
+Aplicación educativa de idiomas para niños, familias y adultos. El objetivo es que aprender se sienta como jugar: lecciones visuales, voz, juegos, progreso y una Teacher AI que acompañe al estudiante.
 
-## Objetivo
+## Estado actual
 
-Aprender idiomas mediante una secuencia simple y positiva:
+Ya existe un primer MVP navegable con:
 
-**Ver → escuchar → repetir → recibir ayuda → ganar estrellas → jugar → avanzar.**
+- Home responsive para móvil, tablet, web y pantallas grandes.
+- Branding **Alana ♥ Victoria**.
+- Idiomas iniciales: inglés, francés, italiano, español, alemán y portugués.
+- Rangos de edad: 2–4, 5–7, 8–11 y 12+/adultos.
+- Primera lección **Hawaii Presentation** con cinco frases, traducción, audio Web, estrellas y progreso.
+- Primer juego visual interactivo.
+- Pantalla **Teacher AI** preparada para backend seguro.
+- Flujo **Foto/Tarea → Crear lección** con generador local de demostración; cámara/OCR real pendiente.
+- Perfiles Alana y Victoria.
+- Dashboard inicial de progreso.
+- Concepto de TV/pantalla grande preparado para una fase Samsung/Tizen específica.
 
-## Plataformas objetivo
-
-- Web / PWA
-- Android
-- iOS / iPadOS
-- Tablets
-- Smart TV mediante experiencia web optimizada para pantalla grande
-- Samsung TV/Tizen como fase específica de empaquetado y navegación por control remoto
-
-## Idiomas iniciales
-
-- Inglés
-- Francés
-- Italiano
-- Español
-- Alemán
-- Portugués
-
-La arquitectura debe permitir sumar más idiomas sin rehacer la aplicación.
-
-## Rangos de aprendizaje
-
-- 2–4: Little Explorer
-- 5–7: Young Learner
-- 8–11: Junior Student
-- 12+: Teen & Adult
-
-## MVP actual
-
-- Home responsive con marca **Alana & Victoria**
-- Selector visual de idiomas y edades
-- Primera lección `Hawaii Presentation`
-- Progreso por frase
-- Audio de pronunciación en Web
-- Sistema inicial de estrellas
-- Primer juego visual interactivo
-- Diseño adaptable a móvil, web y pantalla grande
-
-## Siguiente corte
-
-1. Voz real multiplataforma.
-2. Evaluación de pronunciación.
-3. Persistencia de progreso.
-4. Perfiles Alana / Victoria / invitado.
-5. Selector dinámico de idioma.
-6. Teacher AI conversacional.
-7. Cámara/OCR: fotografía de tarea → generación de lección.
-8. Modo TV y navegación con control remoto.
-9. Builds Android/iOS y estrategia Tizen.
-10. Deploy web público.
-
-El seguimiento maestro está en el Issue #1 del repositorio.
-
-## Desarrollo
+## Ejecutar
 
 ```bash
 npm install
-npx expo start
+npx expo start --clear
 ```
 
 Web:
@@ -74,26 +31,36 @@ Web:
 npm run web
 ```
 
-Android:
+## Rutas principales
 
-```bash
-npm run android
-```
+- `/` — Home
+- `/lesson` — Hawaii Presentation
+- `/games` — juego visual
+- `/teacher` — Teacher AI
+- `/scan` — tarea a lección
+- `/profiles` — perfiles Alana/Victoria
+- `/progress` — progreso
 
-## Estructura principal
+## Arquitectura objetivo
 
-```text
-src/app/
-  index.tsx    # Home
-  lesson.tsx   # Lección interactiva
-  games.tsx    # Juegos visuales
-  _layout.tsx  # Navegación
-```
+El proyecto usa Expo SDK 57, React Native, Expo Router y TypeScript. La IA real, OCR y evaluación avanzada de pronunciación deben conectarse mediante servicios/backend seguros: las API keys nunca deben vivir dentro del frontend.
 
-## Principios
+## Siguientes hitos
 
-- Cada corte debe quedar ejecutable.
-- No fingir IA o evaluación si todavía no existe un motor real.
-- Prioridad: funcionamiento → experiencia → seguridad → IA → publicación.
-- Interfaz amigable, visual y accesible para niños, sin limitar el producto a público infantil.
-- No guardar claves privadas en el frontend.
+1. Voz y pronunciación real multiplataforma.
+2. Persistencia local de perfiles y progreso.
+3. Cámara real + OCR.
+4. Backend de Teacher AI con filtros infantiles.
+5. Generador dinámico de lecciones y juegos.
+6. Android/iOS instalables.
+7. Modo TV con navegación por control remoto y estrategia Samsung Tizen.
+
+## Primera lección
+
+**Hawaii Presentation**
+
+- Good morning, everyone!
+- Aloha! Welcome to Hawaii!
+- Today we will show you some beautiful parts of Hawaiian culture.
+- You will see animals, food, traditional clothes, music, and dance.
+- We hope you enjoy our presentation. Mahalo!
