@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PremiumNav } from '@/components/premium-nav';
 
 const metrics=[['⭐','27','estrellas'],['📚','8','lecciones'],['🔥','5','días seguidos'],['🏆','3','insignias']];
-const languages=[['🇺🇸','English',65,'#25A8FF'],['🇪🇸','Español',40,'#FF9A3D'],['🇫🇷','Français',20,'#7C49FF'],['🇮🇹','Italiano',15,'#23B86B']];
+const languages: [string,string,number,string][]=[['🇺🇸','English',65,'#25A8FF'],['🇪🇸','Español',40,'#FF9A3D'],['🇫🇷','Français',20,'#7C49FF'],['🇮🇹','Italiano',15,'#23B86B']];
 const achievements=[['🌟','Primera lección','¡Gran inicio!'],['🔤','Maestro del vocabulario','10 palabras nuevas'],['🔥','Racha de 5 días','¡Sigue así!']];
 export default function ProgressScreen(){return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.page}><PremiumNav/>
  <View style={styles.hero}><View style={styles.avatarWrap}><Text style={styles.avatar}>👧🏻</Text><View style={styles.levelBadge}><Text style={styles.levelBadgeText}>3</Text></View></View><View style={styles.heroCopy}><Text style={styles.eyebrow}>MI PROGRESO</Text><Text style={styles.name}>Victoria</Text><Text style={styles.level}>Nivel 3 · Young Learner</Text><View style={styles.heroTrack}><View style={styles.heroFill}/></View><Text style={styles.progressText}>3/10 para subir de nivel</Text></View><Text style={styles.starBurst}>✨</Text></View>
