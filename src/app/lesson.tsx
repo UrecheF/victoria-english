@@ -15,7 +15,7 @@ function speakWeb(text: string) { if (Platform.OS !== 'web' || typeof window ===
 
 export default function LessonScreen() {
   const [step,setStep]=useState(0); const [stars,setStars]=useState(0); const [message,setMessage]=useState('Escucha primero y luego practica.');
-  const phrase=lessons[step]; const progress=useMemo(()=>`${Math.round(((step+1)/lessons.length)*100)}%`,[step]);
+  const phrase=lessons[step]; const progress=useMemo<`${number}%`>(()=>`${Math.round(((step+1)/lessons.length)*100)}%`,[step]);
   const listen=()=>setMessage(speakWeb(phrase.text)?'🔊 Escucha el ritmo y repite con calma.':'🔊 La voz nativa móvil se conecta en la siguiente fase.');
   const practice=()=>{const nextStars=Math.min(3,stars+1);setStars(nextStars);setMessage(nextStars===3?'🎉 ¡Excelente! Ya puedes continuar.':'🌟 ¡Muy bien! Una vez más.');};
   const next=()=>{if(step<lessons.length-1){setStep(step+1);setStars(0);setMessage('Escucha primero y luego practica.');}};
