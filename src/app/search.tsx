@@ -13,21 +13,43 @@ const staticResults = [
   ['Teacher AI','Profesora virtual con IA','/teacher','🤖'],['Mi Tarea','Foto, OCR y lección','/scan','📸'],['Mi Progreso','Estrellas, XP y logros','/progress','📈'],['Perfiles','Alana y Victoria','/profiles','👧'],['Lecciones','Todas las lecciones','/lessons','📚'],['Pronunciación','Laboratorio de voz','/pronunciation','🎤'],['Vocabulario','Tarjetas de palabras','/vocabulary','🧠'],['Conversación','Práctica conversacional','/conversation','💬'],['Logros','Insignias y recompensas','/achievements','🏆'],
 ] as const;
 
+const languageNamesInSpanish: Record<string, string> = {
+  ar: 'árabe',
+  de: 'alemán',
+  en: 'inglés',
+  es: 'español',
+  fr: 'francés',
+  it: 'italiano',
+  ja: 'japonés',
+  ko: 'coreano',
+  pt: 'portugués',
+  zh: 'chino',
+};
+
+const normalizeSearchText = (value: string) =>
+  value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
 export default function SearchScreen(){
   const [query,setQuery]=useState('');
-  const normalized=query.trim().toLowerCase();
+  const normalized=normalizeSearchText(query.trim());
   const results=useMemo(()=>{
-    const languages=languageOptions.map(l=>({title:l.nativeName,subtitle:`Aprender ${l.name}`,href:`/language/${l.code}`,icon:l.flag}));
-    const games=gameResults.map(([title,subtitle,href])=>({title,subtitle,href,icon:'🎮'}));
-    const sections=staticResults.map(([title,subtitle,href,icon])=>({title,subtitle,href,icon}));
+    const languages=languageOptions.map(l=>({
+      title:l.nativeName,
+      subtitle:`Aprender ${languageNamesInSpanish[l.code] ?? l.name}`,
+      href:`/language/${l.code}`,
+      icon:l.flag,
+      keywords:[l.name,languageNamesInSpanish[l.code],...l.lessons.flatMap(lesson=>[lesson.title,lesson.phrase,lesson.translation])].join(' '),
+    }));
+    const games=gameResults.map(([title,subtitle,href])=>({title,subtitle,href,icon:'🎮',keywords:''}));
+    const sections=staticResults.map(([title,subtitle,href,icon])=>({title,subtitle,href,icon,keywords:''}));
     const all=[...languages,...games,...sections];
     if(!normalized) return all.slice(0,14);
-    return all.filter(item=>`${item.title} ${item.subtitle}`.toLowerCase().includes(normalized));
+    return all.filter(item=>normalizeSearchText(`${item.title} ${item.subtitle} ${item.keywords}`).includes(normalized));
   },[normalized]);
 
   return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.page}><PremiumNav/>
     <View style={styles.hero}><Text style={styles.eyebrow}>BUSCADOR GLOBAL</Text><Text style={styles.title}>¿Qué quieres aprender?</Text><Text style={styles.sub}>Busca idiomas, juegos, lecciones, Teacher AI, pronunciación, vocabulario y más.</Text>
-      <View style={styles.searchBox}><Text style={styles.searchIcon}>⌕</Text><TextInput autoFocus value={query} onChangeText={setQuery} placeholder="Ej: francés, animales, pronunciación..." placeholderTextColor="#8291AA" style={styles.input}/>{query.length>0&&<Pressable onPress={()=>setQuery('')} style={styles.clear}><Text style={styles.clearText}>×</Text></Pressable>}</View>
+      <View style={styles.searchBox}><Text style={styles.searchIcon}>⌕</Text><TextInput autoFocus value={query} onChangeText={setQuery} placeholder="Ej: francés, animales, pronunciación..." placeholderTextColor="#8291AA" style={styles.input} accessibilityLabel="Buscar idiomas, juegos y lecciones" returnKeyType="search"/>{query.length>0&&<Pressable onPress={()=>setQuery('')} style={styles.clear} accessibilityRole="button" accessibilityLabel="Borrar búsqueda"><Text style={styles.clearText}>×</Text></Pressable>}</View>
     </View>
     <Text style={styles.count}>{results.length} resultados</Text>
     <View style={styles.grid}>{results.map((item)=><Link key={`${item.title}-${item.href}`} href={item.href as any} asChild><Pressable style={styles.card}><Text style={styles.icon}>{item.icon}</Text><View style={styles.copy}><Text style={styles.cardTitle}>{item.title}</Text><Text style={styles.cardSub}>{item.subtitle}</Text></View><Text style={styles.arrow}>→</Text></Pressable></Link>)}</View>
