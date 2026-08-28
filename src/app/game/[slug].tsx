@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -27,11 +27,11 @@ const games:Record<string,Game>={
 export default function GameScreen(){
   const {slug}=useLocalSearchParams<{slug:string}>();
   const game=games[slug||'']||games['word-match'];
-  const[selected,setSelected]=useState<string[]>([]);const[status,setStatus]=useState<'idle'|'good'|'bad'>('idle');const[score,setScore]=useState(0);
+  const[selected,setSelected]=useState<string[]>([]);const[status,setStatus]=useState<'idle'|'good'|'bad'>('idle');const[score,setScore]=useState(0);const completedRef=useRef(false);
   const built=useMemo(()=>selected.join(game.type==='build'?'':' '),[selected,game.type]);
-  const reset=()=>{setSelected([]);setStatus('idle')};
-  const choose=(value:string)=>{if(status==='good')return;if(game.type==='memory'){const next=[...selected,value].slice(-2);setSelected(next);if(next.length===2){const pair=next.join('|');const reverse=[...next].reverse().join('|');const ok=pair===game.answer||reverse===game.answer;setStatus(ok?'good':'bad');if(ok)setScore(s=>s+10);}return;}const ok=value===game.answer;setSelected([value]);setStatus(ok?'good':'bad');if(ok)setScore(s=>s+10)};
-  const token=(value:string)=>{if(status==='good'||selected.length>=(game.tokens?.length||0))return;const next=[...selected,value];setSelected(next);const target=game.type==='build'?next.join(''):next.join(' ');if(target===game.answer){setStatus('good');setScore(s=>s+15)}else if(next.length===(game.tokens?.length||0))setStatus('bad')};
+  const reset=()=>{completedRef.current=false;setSelected([]);setStatus('idle')};
+  const choose=(value:string)=>{if(completedRef.current)return;if(game.type==='memory'){const next=[...selected,value].slice(-2);setSelected(next);if(next.length===2){const pair=next.join('|');const reverse=[...next].reverse().join('|');const ok=pair===game.answer||reverse===game.answer;setStatus(ok?'good':'bad');if(ok){completedRef.current=true;setScore(s=>s+10)};}return;}const ok=value===game.answer;setSelected([value]);setStatus(ok?'good':'bad');if(ok){completedRef.current=true;setScore(s=>s+10)}};
+  const token=(value:string)=>{if(completedRef.current||selected.length>=(game.tokens?.length||0))return;const next=[...selected,value];setSelected(next);const target=game.type==='build'?next.join(''):next.join(' ');if(target===game.answer){completedRef.current=true;setStatus('good');setScore(s=>s+15)}else if(next.length===(game.tokens?.length||0))setStatus('bad')};
   const listen=()=>Speech.speak(game.prompt,{language:'en-US',rate:.8});
 
   return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.page}><PremiumNav/>
